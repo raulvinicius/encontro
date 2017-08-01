@@ -41,7 +41,33 @@
             ga('create','UA-XXXXX-X','auto');ga('send','pageview');
         </script>
          -->
+
+        <?php if (is_user_logged_in() || new DateTime() > new DateTime("2017-08-01 14:00:00") ): ?>
+
         </div> <!-- END wrap-site -->
+
+        <div class="msg-show">
+            <div class="wrap">
+                <i></i>
+                <div class="tit"></div>
+                <div class="msg"></div>
+                <button>Fechar</button>
+            </div>
+        </div>
+
+
+        <?php else : ?>
+
+        <div class="tempo">
+            
+            <h2>5º Encontro da Vinci</h2>
+            <div class="wrap-tempo col-md-3">
+                <div>As inscrições começam <span id="nowrap">às <span id="azul">14<span id="sml">h</span></span></span>.</div>
+            </div>
+
+        </div>
+
+        <?php endif; ?> <!-- END if user logged in -->
 
     </body>
 

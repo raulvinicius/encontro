@@ -10,21 +10,21 @@
 
 // CUSTOM POST
 
-/*function codex_custom_init() {
+function codex_custom_init() {
 	$labelsAcomodacoes = array(
-		'name' => _x('Acomodações', 'nome plural do tipo de post'),
-		'singular_name' => _x('Acomodação', 'nome singular do tipo de post'),
-		'add_new' => _x('Adicionar Acomodação', 'acomodacoes'),
-		'add_new_item' => __('Adicionar Acomodação'),
-		'edit_item' => __('Editar Acomodação'),
-		'new_item' => __('Nova Acomodação'),
-		'all_items' => __('Todas as Acomodações'),
-		'view_item' => __('Ver Acomodação'),
-		'search_items' => __('Procurar por Acomodação'),
-		'not_found' =>  __('Nenhuma Acomodação foi encontrada'),
-		'not_found_in_trash' => __('Não há Acomodações na lixeira'), 
+		'name' => _x('Inscrições', 'nome plural do tipo de post'),
+		'singular_name' => _x('Inscrição', 'nome singular do tipo de post'),
+		'add_new' => _x('Adicionar Inscrição', 'inscricoes'),
+		'add_new_item' => __('Adicionar Inscrição'),
+		'edit_item' => __('Editar Inscrição'),
+		'new_item' => __('Nova Inscrição'),
+		'all_items' => __('Todas as Inscrições'),
+		'view_item' => __('Ver Inscrição'),
+		'search_items' => __('Procurar por Inscrição'),
+		'not_found' =>  __('Nenhuma Inscrição foi encontrada'),
+		'not_found_in_trash' => __('Não há Inscrições na lixeira'), 
 		'parent_item_colon' => '',
-		'menu_name' => 'Acomodações'
+		'menu_name' => 'Inscrições'
 
 	);
 	$argsAcomodacoes = array(
@@ -43,12 +43,12 @@
 	    //'taxonomies' => array('nome-da-taxonomy') //DESCOMENTAR CASO TENHA CRIADO UMA TAXONOMY PARA ESSE "POST TYPE"
 		'supports' => array( 'title' )
 	); 
-	register_post_type('acomodacoes',$argsAcomodacoes);
+	register_post_type('inscricoes',$argsAcomodacoes);
 
 
 }
 add_action( 'init', 'codex_custom_init' );
-*/
+
 
 
 
@@ -122,9 +122,9 @@ function change_default_title( $title ){
     $screen = get_current_screen();
 
 	// ALTERAR O PLACEHOLDER DO TITLE FIELD
-    if ( 'depoimentos' == $screen->post_type )
+    if ( 'inscricoes' == $screen->post_type )
     {
-        $title = 'Autor do depoimento';
+        $title = 'Nome do aluno';
     }
 
     // ESCONTE O TITLE FIELD DE POST EDITS DO TIPO PÁGINA

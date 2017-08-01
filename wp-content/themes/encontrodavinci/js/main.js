@@ -1,9 +1,12 @@
 $(document).ready(function() {
 
+	// msgShow('sucesso', 'Show!', 'Agora sua mensagem irá inspirar outras pessoas.')
 
 	$( window ).scroll(function() 
 	{
 		setTimeout(showInAnimation,400);
+		doElParallax();
+		realcaMenu();
 	});
 	$( window ).trigger('scroll');
 
@@ -15,8 +18,35 @@ $(document).ready(function() {
 	$( window ).trigger('resize');
 
 
+	//-----------------TIMER-----------------//
+
+	var data1 = new Date( $.now() );
+
+	var StringDate = "2017-8-1-14-00-10"
+	var date = StringDate.split("-"); 
+	var data2 = new Date(date[0],date[1]-1,date[2],date[3],date[4],date[5]);//Date object
+
+	if(data1 < data2)
+	{
+		var intTempo = setInterval(function()
+		{
+			data1 = new Date( $.now() );
+
+			console.log(data1 > data2)
+
+			if(data1 > data2)
+			{
+				location.reload();
+			}
+		}, 1000)
+	}
 
 
+
+	//-----------------TIMER-----------------//
+	
+	
+	
 	//-----------------MASONRY-----------------//
 /*
 	var grid = $('.grid').masonry({
@@ -33,6 +63,108 @@ $(document).ready(function() {
 	setInterval( callMasonry, 2000 );
 */
 	//-----------------MASONRY-----------------//
+
+
+
+
+	//-----------------TWEET LIKE-----------------//
+
+	$('body').on('click', '.twitter #like', function() {
+		if($(this).hasClass('on'))
+		{
+			$(this).removeClass('on')
+		}
+		else
+		{
+			$(this).addClass('on')
+		}
+	});
+
+	//-----------------TWEET LIKE-----------------//
+
+
+
+
+	//-----------------FORM MATRICULA-----------------//
+
+	$( '#inscricao form #mtcpf' ).mask('0#');
+
+
+	$('#inscricao form #mtcpf').on('change click keyup input paste', function() 
+	{
+		if( $(this).val() == '' )
+		{
+			$(this)
+				.closest('form')
+				.find('input[type="submit"]')
+				.attr('disabled', 'disabled')
+		}
+		else
+		{
+			$(this)
+				.closest('form')
+				.find('input[type="submit"]')
+				.removeAttr('disabled')
+		}
+	});
+
+	//-----------------FORM MATRICULA-----------------//
+
+
+
+
+	//-----------------FORM CONVIDADOS-----------------//
+
+
+	$('#inscricao .etapa-2 form #prcvdd, #inscricao .etapa-2 form #sgcvdd').on('change click keyup input paste', function() 
+	{
+		confereCamposEtp2();
+
+		if( $(this).val() == '' )
+		{
+			$(this)
+				.closest('form')
+				.find('div[data-conv="' + $(this).attr('name') + '"] .path-convidado')
+				.css('fill', '#ccc');
+		}
+		else
+		{
+			$(this)
+				.closest('form')
+				.find('div[data-conv="' + $(this).attr('name') + '"] .path-convidado')
+				.css('fill', '#1095c4');
+		}
+	});
+
+	$('#inscricao .etapa-2 form #ddsok, #inscricao .etapa-2 form #cnfrm').on('change click keyup input paste', function() 
+	{
+		confereCamposEtp2();
+	});
+
+	//-----------------FORM CONVIDADOS-----------------//
+
+
+
+
+	//-----------------FORM REENVIA-----------------//
+
+	$('#inscricao .etapa-3 #fecha-etapa').on('click', function() {
+		fechaEtapa3();
+	});
+
+	//-----------------FORM REENVIA-----------------//
+
+
+
+
+	//-----------------MSG SHOW-----------------//
+
+	$('.msg-show button').on('click', function() {
+		$('.msg-show').hide();
+		$('.msg-show .tit, .msg-show .msg').text('');
+	});
+
+	//-----------------MSG SHOW-----------------//
 
 
 	//JS PARALLAX
@@ -55,40 +187,18 @@ $(document).ready(function() {
 		}
 		$(window).on('scroll', function () {
 			
-			//fake parallax bg
-			$('.bg-parallax').each(function()
-			{
-				var $obj = $(this);
-
-				var yPos = -($(window).scrollTop() / $obj.data('speed')); 
-		 
-				var bgpos = '50% '+ yPos + 'px';	
-		
-				$obj.css('background-position', bgpos );
-			})
-
-			$('.el-parallax').each(function()
-			{
-				var $obj = $(this);
-
-				var yPos = -($(window).scrollTop() / $obj.data('speed')); 
-		 
-				var tPos = yPos + 'px';
-
-				console.log(tPos);
-		
-				// $obj.css('top', tPos );
-			})
-
+			$('.wrap-site').offset({top: '-' + $(window).scrollTop() + 'px'})
+/*
 			$('.wrap-site').stop().animate(
 			{
 				top:  '-' + $(window).scrollTop() + 'px'
 			}, 500, 'easeOutQuint');
-			
+*/			
+			realcaMenu();
 		})
-		var intTamanhoBody = setInterval(function()
+/*		var intTamanhoBody = setInterval(function()
 		{
-			tamanhoBody();
+			tamanhoBody();	
 		}, 100);
 		setTimeout(function()
 		{
@@ -99,7 +209,7 @@ $(document).ready(function() {
 			}, 2000);
 
 		}, 2000);
-
+*/
 	}
 
 
@@ -134,7 +244,123 @@ $(document).ready(function() {
 
 	$('form.js').submit(function(e){return false;e.preventDefault();});
 
-	$('form.js input[type="submit"]').bind('click', 
+	$('#inscricao .etapa-1 form input[type="submit"]').bind('click', 
+		function()
+		{
+			$(this).closest('form').validate({
+				submitHandler: function(form)
+				{
+
+					$(form)
+						.closest('.container')
+						.find('.loading .col-md-offset-1')
+						.height( $(form).closest('.etapa-1').find('.col-md-offset-1').height() )
+						.closest('.loading')
+						.removeClass('invi')
+						.addClass('on');
+
+					$(form)
+						.closest('.etapa-1')
+						.addClass('invi');
+
+					$(form).ajaxSubmit({
+						type: 'post',
+						success: matriculaOK
+					});
+
+				}, 
+				rules: {
+					mtcpf: {
+						required: true,
+						rangelength: [6, 12],
+					},
+				},
+				messages: {
+					mtcpf: {
+						required: '<span>Campo obrigatório</span>',
+						rangelength: '<span>Matrícula ou CPF inválido</span>',
+					},
+				}
+			});
+		}
+	)
+
+	$('#inscricao .etapa-2 form input[type="submit"]').bind('click', 
+		function()
+		{
+			$(this).closest('form').validate({
+				submitHandler: function(form)
+				{
+
+					$(form)
+						.closest('.container')
+						.find('.loading .col-md-offset-1')
+						.height( $(form).closest('.etapa-2').find('.col-md-offset-1').height() )
+						.closest('.loading')
+						.removeClass('invi')
+						.addClass('on');
+						
+					$(form)
+						.closest('.etapa-2')
+						.addClass('invi');
+					$(form).ajaxSubmit({
+						type: 'post',
+						success: dadosOK
+					});
+
+				}, 
+				rules: {
+					ddsok: {
+						required: true
+					},
+					ml: {
+						required: true,
+						email: true,
+					},
+				},
+				messages: {
+					ddsok: {
+						required: '<span>Confirme se os dados estão OK</span>'
+					},
+					ml: {
+						required: '<span>Informe um e-mail</span>',
+						email: '<span>Informe um e-mail válido</span>'
+					},
+				}
+			});
+		}
+	)
+
+	$('#inscricao .etapa-3 form input[type="submit"]').bind('click', 
+		function()
+		{
+			$(this).closest('form').validate({
+				submitHandler: function(form)
+				{
+
+					$(form)
+						.closest('.container')
+						.find('.loading .col-md-offset-1')
+						.height( $(form).closest('.etapa-3').find('.col-md-offset-1').height() )
+						.closest('.loading')
+						.removeClass('invi')
+						.addClass('on');
+						
+
+					$(form)
+						.closest('.etapa-3')
+						.addClass('invi');
+					$(form).ajaxSubmit({
+						type: 'post',
+						success: envioOK
+					});
+
+				}, 
+			});
+		}
+	)
+
+/*	$('form.js input[type="submit"]').bind('click', 
 		function()
 		{
 			$(this).closest('form').validate({
@@ -182,7 +408,7 @@ $(document).ready(function() {
 				}
 			});
 		}
-	)
+	)*/
 
 	$('.alert button').bind('click', function()
 	{
@@ -191,10 +417,128 @@ $(document).ready(function() {
 
 }); //end $(document).ready
 
-function contatoOk (data)
+function matriculaOK (data)
+{
+
+	var matricula = $('#inscricao .etapa-1 #mtcpf').val();
+	var nome = $('#inscricao .etapa-1 #nmln').val();
+
+	if( data == 'sucesso')
+	{
+		$('#inscricao .loading')
+			.removeClass('on')
+			.addClass('invi');
+
+		$('#inscricao .etapa-2')
+			.removeClass('invi')
+			.find('#mtcpf').val( matricula )
+			.closest('.etapa-2')
+			.find('#tgt-matricula').text(matricula)
+			.closest('.etapa-2')
+			.find('#nmln').val(nome)
+			.closest('.etapa-2')
+			.find('#tgt-nome').text(nome);
+	}
+	else
+	{
+		msgShow('erro', 'Ih!', 'Houve um erro ao verificar sua matrícula, por favor, tente novamente.')
+
+		$('#inscricao .loading')
+			.removeClass('on')
+			.addClass('invi');
+
+		$('#inscricao .etapa-1')
+			.removeClass('invi');
+	}
+
+}
+
+function dadosOK (data)
+{
+	// console.log($(this));
+	// console.log(data);
+
+	var nome = $('#inscricao .etapa-2 #nmln').val();
+	var email = $('#inscricao .etapa-2 #ml').val();
+	email = email.split("@");
+	email[0] = email[0].slice(0, 3) + '*****' + email[0].slice(-3)
+	email = email.join('@');
+	var matricula = $('#inscricao .etapa-2 #mtcpf').val();
+	var presenca = $('#inscricao .etapa-2 #cnfrm').val();
+	var convidado1 = $('#inscricao .etapa-2 #prcvdd').val();
+	var convidado2 = $('#inscricao .etapa-2 #sgcvdd').val();
+
+	if( data != 'sucesso')
+	{
+		$('#inscricao .loading')
+			.removeClass('on')
+			.addClass('invi');
+
+		$('#inscricao .etapa-3')
+			.removeClass('invi')
+			.find('#tgt-email').text(email)
+			.closest('.etapa-3')
+			.find('#ml').val(email)
+			.closest('.etapa-3')
+			.find('#nmln').val(nome)
+			.closest('.etapa-3')
+			.find('#mtcpf').val(matricula)
+			.closest('.etapa-3')
+			.find('#cnfrm').val(presenca)
+			.closest('.etapa-3')
+			.find('#prcvdd').val(convidado1)
+			.closest('.etapa-3')
+			.find('#sgcvdd').val(convidado2)
+
+	}
+	else
+	{
+		msgShow('erro', 'Ih!', 'Houve um erro ao enviar seu ingresso, por favor, tente novamente.')
+
+		$('#inscricao .loading')
+			.removeClass('on')
+			.addClass('invi');
+
+		$('#inscricao .etapa-2')
+			.removeClass('invi');
+	}
+
+}
+
+function envioOK (data)
 {
 	console.log($(this));
 	console.log(data);
+
+	if( data != 'sucesso')
+	{
+
+		$('#inscricao .loading')
+			.removeClass('on')
+			.addClass('invi');
+
+		$('#inscricao .etapa-3')
+			.removeClass('invi');
+
+	}
+	else
+	{
+		msgShow('erro', 'Ih!', 'Houve um erro ao enviar seu ingresso, por favor, tente novamente.')
+
+		$('#inscricao .loading')
+			.removeClass('on')
+			.addClass('invi');
+
+		$('#inscricao .etapa-3')
+			.removeClass('invi');
+	}
+
+}
+
+function contatoOk (data)
+{
+	// console.log($(this));
+	// console.log(data);
 
 	$('#contato #process').hide();
 	$('#contato form fieldset').show();
@@ -284,7 +628,7 @@ function tamanhoBody ()
 
 	if( isWindows() && isChrome() )
 	{
-		$('body').height($('.wrap-site').height());
+		// $('body').height($('.wrap-site').height());
 	}
 }
 
@@ -296,4 +640,95 @@ function isWindows ()
 function isChrome () 
 {
 	return (window.chrome)
+}
+
+function doElParallax ()
+{
+	// console.log($(window).scrollTop());
+
+	//fake parallax bg
+	$('.bg-parallax').each(function()
+	{
+		var $obj = $(this);
+
+		var yPos = -($(window).scrollTop() * ( $obj.data('bg-dist') ));
+	
+		var bgpos = yPos + 'px';
+/*
+		$obj.stop().animate(
+		{
+			'background-position-y':  '-' + $(window).scrollTop() + 'px'
+		}, 500, 'easeOutQuint');
+*/		
+		$obj.css('background-position-y', bgpos);
+
+	})
+
+	$('.el-parallax').each(function()
+	{
+		var $objP = $(this);
+
+		var tPos = ( $(window).scrollTop() * ( $objP.data('el-dist') ) ); 
+/*
+		$objP.stop().animate({
+			top: tPos
+		}, 500, 'easeOutQuint');
+*/
+
+		$objP.offset({top: tPos});
+
+	})
+}
+
+function realcaMenu ()
+{
+	/*
+	console.log("home: " + $('#home').offset().top + " | " + $(window).scrollTop() + " | " + ($('#home').offset().top > $(window).scrollTop()) )
+	console.log("voce: " + $('#voce-e-show').offset().top + " | " + $(window).scrollTop() + " | " + ($('#voce-e-show').offset().top > $(window).scrollTop()) )
+	console.log("atracoes: " + $('#atracoes').offset().top + " | " + $(window).scrollTop() + " | " + ($('#atracoes').offset().top > $(window).scrollTop()) )
+	console.log("inscricoes: " + $('#inscricao').offset().top + " | " + $(window).scrollTop() + " | " + ($('#inscricao').offset().top > $(window).scrollTop()) )
+	*/
+
+	$('.menu-principal li').removeClass('atual');
+	$('.menu-principal li').each(function() 
+	{
+		if( $($(this).find('a').attr('href')).offset().top - 200 > $(window).scrollTop()- 1080 )
+		{
+			$(this).addClass('atual');
+			return false;
+		}
+	});
+
+}
+
+function msgShow(tema, tit, txt)
+{
+	$('.msg-show').show();
+	$('.msg-show .tit').text(tit);
+	$('.msg-show .msg').text(txt);
+	$('.msg-show .wrap').css('margin-top', '-' + ($('.msg-show .wrap').height() / 2) + 'px' )
+}
+
+function confereCamposEtp2 ()
+{
+	if( !$('#inscricao .etapa-2 form #ddsok').is(':checked') && !$('#inscricao .etapa-2 form #cnfrm').is(':checked') && $('#inscricao .etapa-2 form #prcvdd').val() == '' && $('#inscricao .etapa-2 form #sgcvdd').val() == '' )
+	{
+		$('#inscricao .etapa-2 form input[type="submit"]')
+			.attr('disabled', 'disabled')
+	}
+	else
+	{
+		$('#inscricao .etapa-2 form input[type="submit"]')
+			.removeAttr('disabled')
+	}
+
+}
+
+function fechaEtapa3 ()
+{
+	$('#inscricao .etapa-3')
+		.addClass('invi');
+
+	$('#inscricao .etapa-1')
+		.removeClass('invi')
 }

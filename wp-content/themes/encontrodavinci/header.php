@@ -123,6 +123,8 @@
     </head>
 
     <body>
+        <?php date_default_timezone_set('America/Sao_Paulo'); ?>
+
         <?php wp_path_to_js(); ?>
 
         <!--[if lt IE 8]>
@@ -135,6 +137,8 @@
             </div>
 
         <![endif]-->
+
+        <?php if (is_user_logged_in() || new DateTime() > new DateTime("2017-08-01 14:00:00") ): ?>
 
         <div class="wrap-site">
 
@@ -150,7 +154,7 @@
                                     <circle class="st0 ani-04" cx="22.9" cy="22.9" r="22.9"/>
                                 </svg>
                             </span>
-                            <a class="ani-02" href="#">Home</a>
+                            <a class="ani-02" href="#home">Home</a>
                         </li>
                         <li>
                             <span>
@@ -191,3 +195,4 @@
             </header>
 
         
+        <?php endif; ?>
